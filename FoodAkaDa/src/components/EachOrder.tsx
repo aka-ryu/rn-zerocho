@@ -1,5 +1,12 @@
 import React, {useCallback, useState} from 'react';
-import {Alert, Pressable, StyleSheet, Text, View} from 'react-native';
+import {
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+} from 'react-native';
 import orderSlice, {Order} from '../slices/order';
 import {useAppDispatch} from './../store/index';
 import axios, {AxiosError} from 'axios';
@@ -8,7 +15,7 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../store/reducer';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {LoggedInParamList} from '../../AppInner';
-import EncryptedStorage from 'react-native-encrypted-storage';
+import NaverMapView, {Marker, Path} from 'react-native-nmap';
 
 function EachOrder({item}: {item: Order}) {
   const [detail, setDetail] = useState(false);
@@ -46,6 +53,7 @@ function EachOrder({item}: {item: Order}) {
   const onReject = useCallback(() => {
     dispatch(orderSlice.actions.rejectOrder(item.orderId));
   }, [dispatch, item.orderId]);
+  const {start, end} = item;
 
   return (
     <View key={item.orderId} style={styles.orderContainer}>
@@ -58,8 +66,41 @@ function EachOrder({item}: {item: Order}) {
       </Pressable>
       {detail && (
         <View>
-          <View>
-            <Text>네이버맵이 들어갈 장소</Text>
+          <View
+            style={{
+              width: Dimensions.get('window').width - 30,
+              height: 200,
+              marginTop: 10,
+            }}>
+            <NaverMapView
+              style={{width: '100%', height: '100%'}}
+              zoomControl={false}
+              center={{
+                zoom: 10,
+                tilt: 50,
+                latitude: (start.latitude + end.latitude) / 2,
+                longitude: (start.longitude + end.longitude) / 2,
+              }}>
+              <Marker
+                coordinate={{
+                  latitude: start.latitude,
+                  longitude: start.longitude,
+                }}
+                pinColor="blue"
+              />
+              <Path
+                coordinates={[
+                  {
+                    latitude: start.latitude,
+                    longitude: start.longitude,
+                  },
+                  {latitude: end.latitude, longitude: end.longitude},
+                ]}
+              />
+              <Marker
+                coordinate={{latitude: end.latitude, longitude: end.longitude}}
+              />
+            </NaverMapView>
           </View>
           <View style={styles.buttonWrapper}>
             <Pressable

@@ -3,6 +3,7 @@ apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.grad
 
 import com.android.build.OutputFile
 
+
 /**
  * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
  * and bundleReleaseJsAndAssets).
@@ -132,12 +133,12 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.fooddeliveryapp"
+        applicationId "com.akaryu.fooddeliveryapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        resValue "string", "build_config_package", "com.fooddeliveryapp"
+        resValue "string", "build_config_package", "com.akaryu.fooddeliveryapp"
     }
     splits {
         abi {
@@ -191,6 +192,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.naver.maps:map-sdk:3.16.1'
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
